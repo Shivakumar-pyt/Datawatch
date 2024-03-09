@@ -1,0 +1,23 @@
+.topper
+{
+ /* position: absolute; */
+ width: 90%;
+ position: absolute;
+ left: 50px;
+height: 97px;
+z-index: 2;
+background-color: #6b6054;
+border-radius: 20px;
+
+/* color:black; */
+}
+
+.adminpart
+{
+    margin-left: 20px;
+    border-radius: 20px;
+    text-align: center;
+    text-decoration: none;
+    background-color: #04AA6D; /* Green */
+}
+

@@ -1,0 +1,43 @@
+import React, { useState } from 'react';
+import './background.css';
+
+export default function Query() {
+  const defaultText = 'Enter the Query : ';
+  const [value, onChangeText] = useState(defaultText);
+
+  const handleClear = () => {
+    onChangeText(defaultText);
+  };
+
+  const handleChange = () => {
+    // Handle the submission logic here
+  };
+
+  return (
+    <div
+      className='component2'
+      style={{
+        backgroundColor: value,
+        alignItems: 'center',
+        justifyContent: 'center',
+        boxSizing: 'border-box',
+      }}
+    >
+      <textarea
+        rows={4}
+        maxLength={100}
+        onChange={(e) => onChangeText(e.target.value)}
+        value={value}
+        style={{ padding: 10, width: '100%', boxSizing: 'border-box' }}
+      />
+      <div>
+        <button className='button1' onClick={handleClear}>
+          Clear
+        </button>
+        <button className='button2' type='submit' onClick={handleChange}>
+          Submit
+        </button>
+      </div>
+    </div>
+  );
+}

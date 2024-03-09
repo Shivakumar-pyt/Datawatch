@@ -1,0 +1,5 @@
+{"Administrator": {"users": [1, 1, 1], "employee": [1, 1, 1], "code_repo": [1, 1, 1], "projects": [1, 1, 1], "bug_logs": [1, 1, 1], "project_tasks": [0, 0, 0], "test_cases": [1, 0, 0], "permissions": [1, 1, 1]}, 
+"Project Manager": {"users": [0, 0, 0], "employee": [1, 0, 0], "code_repo": [1, 0, 0], "projects": [1, 1, 0], "bug_logs": [1, 0, 0], "project_tasks": [1, 1, 1], "test_cases": [1, 0, 0], "permissions": [1, 0, 0]}, 
+"Team Lead": {"users": [0, 0, 0], "employee": [1, 1, 0], "code_repo": [1, 1, 1], "projects": [1, 0, 0], "bug_logs": [1, 1, 0], "project_tasks": [1, 1, 1], "test_cases": [1, 1, 1], "permissions": [1, 0, 0]}, 
+"Developer": {"users": [0, 0, 0], "employee": [0, 0, 0], "code_repo": [1, 1, 1], "projects": [1, 0, 0], "bug_logs": [1, 1, 0], "project_tasks": [1, 0, 0], "test_cases": [1, 0, 0], "permissions": [0, 0, 0]}, 
+"Quality Assurance": {"users": [0, 0, 0], "employee": [0, 0, 0], "code_repo": [1, 0, 0], "projects": [1, 0, 0], "bug_logs": [1, 1, 1], "project_tasks": [1, 0, 0], "test_cases": [1, 1, 1], "permissions": [0, 0, 0]}}
