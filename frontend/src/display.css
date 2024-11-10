@@ -1,0 +1,8 @@
+.displaytable{
+    margin-top: -50vh;
+}
+
+.record{
+    display: flex;
+    justify-content: space-evenly;
+}

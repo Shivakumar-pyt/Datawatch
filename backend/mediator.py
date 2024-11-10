@@ -2,6 +2,7 @@ from sql_metadata import Parser
 from datetime import datetime, timedelta
 import json
 from generate_dataset import DatasetGenerator
+from error import CustomError
 
 class QueryAnalyzer:
     def __init__(self, query, conn, role, schema_file="schema.json", log_file="logs.json"):
@@ -24,79 +25,93 @@ class QueryAnalyzer:
         return logs
 
     def transform(self):
-        index = self.query.find("from")
-        return "select count(*) " + self.query[index:]
+        try:
+            index = self.query.find("from")
+            return "select count(*) " + self.query[index:]
+        except:
+            return -1
 
     def avg_count(self):
-        command_type = str(self.parser.tokens[0])
-        sum_count = 0
-        dem = 0
-        
-        if command_type == "alter":
-            return 1
-        
-        elif command_type == "select":
-            query2 = self.transform()
-            self.cursor.execute(query2)
-            row = self.cursor.fetchone()[0]
-            sum_count += row
-
-            for subquery in self.parser.subqueries:
-                query2 = self.transform(subquery)
+        try:
+            command_type = str(self.parser.tokens[0])
+            sum_count = 0
+            dem = 0
+            
+            if command_type == "alter":
+                return 1
+            
+            elif command_type == "select":
+                query2 = self.transform()
                 self.cursor.execute(query2)
                 row = self.cursor.fetchone()[0]
                 sum_count += row
 
-        elif command_type == "insert":
-            row = len(self.parser.values)
-            n = len(self.parser.values_dict)
-            sum_count = row / n
+                for subquery in self.parser.subqueries:
+                    query2 = self.transform(subquery)
+                    self.cursor.execute(query2)
+                    row = self.cursor.fetchone()[0]
+                    sum_count += row
 
-        else:
-            query2 = "select count(*) from " + self.parser.tables[0] + " " + self.query[self.query.find("where"):]
-            self.cursor.execute(query2)
-            row = self.cursor.fetchone()[0]
-            sum_count = row
+            elif command_type == "insert":
+                row = len(self.parser.values)
+                n = len(self.parser.values_dict)
+                sum_count = row / n
 
-        if sum_count == 0:
-            return 0
-        
-        for table in self.parser.tables:
-            dem += self.schema[table]["num_rows"]
-        
-        return float(sum_count / dem)
+            else:
+                query2 = "select count(*) from " + self.parser.tables[0] + " " + self.query[self.query.find("where"):]
+                self.cursor.execute(query2)
+                row = self.cursor.fetchone()[0]
+                sum_count = row
+
+            if sum_count == 0:
+                return 0
+            
+            for table in self.parser.tables:
+                dem += self.schema[table]["num_rows"]
+            
+            return float(sum_count / dem)
+        except:
+            return -1
+            # raise CustomError("There is an error in your SQL syntax. Please verify your SQL query.")
 
     def sensitivity(self):
-        sensitivity_score = 0
-        for table in self.parser.tables:
-            sensitivity_score += self.schema[table]["sensitivity"]
-        return sensitivity_score
+        try:
+
+            sensitivity_score = 0
+            for table in self.parser.tables:
+                sensitivity_score += self.schema[table]["sensitivity"]
+            return sensitivity_score
+        except:
+            return -1
 
     def cal_freq_score(self, command_type):
-        date_format = '%Y-%m-%d %H:%M:%S.%f'
-        f_score = 0
-        total_seconds = 6.08400
-        now = datetime.now()
+        try:
+            date_format = '%Y-%m-%d %H:%M:%S.%f'
+            f_score = 0
+            total_seconds = 365.04
+            now = datetime.now()
 
-        n = len(self.logs[command_type][self.role])
-        
-        for i in range(n - 1, -1, -1):
-            stime = self.logs[command_type][self.role][i]
-            time = datetime.strptime(stime, date_format)
-            difference = now - time
+            n = len(self.logs[command_type][self.role])
             
-            if difference.days > 7:
-                break
+            for i in range(n - 1, -1, -1):
+                stime = self.logs[command_type][self.role][i]
+                time = datetime.strptime(stime, date_format)
+                difference = now - time
+                
+                if difference.days > 7:
+                    break
+                
+                seconds_difference = difference.seconds
+                f_score += total_seconds / (seconds_difference + 1)
             
-            seconds_difference = difference.seconds
-            f_score += total_seconds / (seconds_difference + 1)
-        
-        self.logs[command_type][self.role].append(str(datetime.now()))
-        
-        with open('logs.json', 'w') as file:
-            json.dump(self.logs, file, indent=4)
-        
-        return f_score
+            self.logs[command_type][self.role].append(str(datetime.now()))
+            
+            with open('logs.json', 'w') as file:
+                json.dump(self.logs, file, indent=4)
+            
+            return f_score
+        except:
+            return -1
 
     def get_query_info(self):
         dataset_gen = DatasetGenerator()

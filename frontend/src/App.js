@@ -10,6 +10,7 @@ import Background from './Background';
 
 import Query from './Query'
 import HomePage from './HomePage';
+import Warnings from './components/warnings';
 
 // import animationData from 'src/animations/anime1.json'
 
@@ -44,6 +45,7 @@ export default function App() {
         {/* <Route path="/" element={<HomePage />}/> */}
         <Route path="/" element={<MyLogin />}/>
         <Route path="/query" element={<HomePage/>}/>
+        <Route path="/warnings" element={<Warnings/>}/>
       </Routes>
       </Router> 
     </div>

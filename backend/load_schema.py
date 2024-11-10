@@ -9,6 +9,8 @@ class LoadSchema:
         self.query = "SELECT table_name, column_name, data_type FROM information_schema.columns WHERE table_schema = %s"
         self.query2 = "SELECT table_name, table_rows FROM information_schema.tables WHERE table_schema = %s AND table_name = %s"
         self.query3 = "SELECT * FROM permissions"
+        self.tables = ["bug_logs","projects","users","permissions","code_repo","project_tasks","test_cases","warnings",
+                       "employee"]
         self.table_sensitivities = self.table_sensitivities()
         
     
@@ -45,9 +47,9 @@ class LoadSchema:
             return ["permissions","employee"]
         
     
-    def save_schema_as_json(self,tables):
+    def save_schema_as_json(self):
         data = {}
-        for table in tables:
+        for table in self.tables:
             self.cursor.execute(self.query2,(self.conn.database,table))
             row = self.cursor.fetchone()
             data[table] = {}
@@ -55,7 +57,6 @@ class LoadSchema:
             data[table]["sensitivity"] = self.table_sensitivities[table]
             data[table]["columns"] = []
             data[table]["table_mappings"] = self.table_mappings(table)
-    
         
         self.cursor.execute(self.query,(self.conn.database,))
         rows = self.cursor.fetchall()
@@ -65,6 +66,7 @@ class LoadSchema:
             
         with open("schema.json", "w") as json_file:
             json.dump(data, json_file)
+
             
     def save_permissions_as_json(self):
         self.cursor.execute(self.query3)

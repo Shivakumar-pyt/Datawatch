@@ -1,0 +1,16 @@
+.warnings{
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    word-wrap: break-word;
+    margin-top: 5%;
+    margin: auto;
+    margin-left: 4%;
+}
+
+.warning{
+    display: flex;
+    flex-direction: column;
+    font-size: 18px;
+    gap: 2em;
+}

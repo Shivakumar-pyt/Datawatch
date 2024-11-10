@@ -27,12 +27,13 @@ import Navbar from 'react-bootstrap/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './mynavbar.css';
 
-const isAdminUser = () => {
-//   backend
-  return true; 
-};
+// const isAdminUser = () => {
+// //   backend
+//   return true; 
+// };
 
 function MyNavbar() {
+  const role_name = localStorage.getItem("role_name")
   return (
     <Navbar className="bg-body-info topper">
       <Container>
@@ -40,13 +41,13 @@ function MyNavbar() {
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
           <Navbar.Text className="mb-0 h5" style={{ color: 'white' }}>
-            Signed in as: <a href="#login" style={{ color: 'white' }}>Mark Otto</a>
+            {/* Signed in as: <a href="#login" style={{ color: 'white' }}>Mark Otto</a> */}
           </Navbar.Text>
-          {isAdminUser() && (
+          {role_name === "Administrator" && (
             <Navbar.Text>
                 <div className="adminpart" style={{ color: 'white' }}>
                     <button>
-              <a href="/admin" >Admin Dashboard</a>
+              <a href="/warnings" >Admin Dashboard</a>
               </button>
               </div>
             </Navbar.Text>

@@ -1,5 +1,7 @@
 import json
 from sql_metadata import Parser
+import sqlvalidator
+from error import CustomError
 
 class PreprocessQuery:
     def __init__(self,query,role):
@@ -12,19 +14,28 @@ class PreprocessQuery:
 
 
     def check_access(self):
-        check_ind=0
 
-        if self.parser.tokens[0]=="select":
+        try:
+
             check_ind=0
-        
-        if(self.parser.tokens[0]=="insert") or (self.parser.tokens[0]=="update"):
-            check_ind=1
 
-        if self.parser.tokens[0]=="delete":
-            check_ind=2
+            sql_query = sqlvalidator.parse(self.query)
 
-        for table in self.parser.tables:
-            if self.permissions[self.role][table][check_ind]==0:
-                return False
-        
-        return True
+            if (not sql_query.is_valid()) and (str(self.parser.tokens[0])=="select"):
+                return 0
+            
+            if (str(self.parser.tokens[0]) == "select"):
+                check_ind = 0
+            elif (str(self.parser.tokens[0])=="delete"):
+                check_ind = 2
+            else:
+                check_ind = 1
+
+            for table in self.parser.tables:
+                if self.permissions[self.role][table][check_ind]==0:
+                    return 2
+            
+            return 1
+
+        except:
+            return -1

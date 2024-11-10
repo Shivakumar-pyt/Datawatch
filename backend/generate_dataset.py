@@ -3,6 +3,7 @@ import random
 import json
 import pandas as pd
 
+
 class DatasetGenerator:
     def __init__(self):    
         self.queries = ["SELECT","INSERT","UPDATE","DELETE","ALTER"]
@@ -15,6 +16,7 @@ class DatasetGenerator:
         self.avg_data_sizes = list()
         self.frequency_scores = list()
         
+
     def read_schema_info(self):
     
         with open("schema.json","r") as json_file:
@@ -36,6 +38,7 @@ class DatasetGenerator:
             ind=2
             
         return self.permissions[role][table_name][ind]
+    
     
     def get_avg_size(self,tables_selected):
         avg_size=0.0
@@ -70,6 +73,7 @@ class DatasetGenerator:
             return 0.6
         else:
             return 0.5
+        
         
     def generate_data(self,query_type):
         
@@ -132,11 +136,12 @@ class DatasetGenerator:
             
             avg_data_size = self.get_avg_size(tables_selected)
             
-            frequency_score = random.uniform(0.00001,14.0165348)
+            frequency_score = random.uniform(0.00001,14.0165348) / 2
             
             self.dataset_queries.append(query_code)
             self.dataset_roles.append(role_score)
-            self.dataset_sensitivities(table_score)
+            # self.dataset_sensitivities(table_score)
+            self.dataset_sensitivities.append(table_score)
             self.avg_data_sizes.append(avg_data_size)
             self.frequency_scores.append(frequency_score)
 
@@ -154,4 +159,4 @@ class DatasetGenerator:
         df["Average Data Size"] = self.avg_data_sizes
         df["Frequency Score"] = self.frequency_scores
         
-        df.to_csv('output.csv', index=False)
+        df.to_csv('output2.csv', index=False)
